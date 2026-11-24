@@ -50,7 +50,10 @@ def check_name_validity(player_name: str) -> bool:
     # Remember the string method:
     # my_string.isalpha()
 
-    pass
+    if player_name.isalpha():
+        return True
+    else:
+        return False
 
 
 def randomize_stats() -> dict[str, int]:
@@ -75,17 +78,17 @@ def randomize_stats() -> dict[str, int]:
     # Use random.randint(low, high)
     # and the constants imported above.
 
-    starting_money = ...
-    starting_health = ...
-    starting_min_dmg = ...
-    starting_max_dmg = ...
+    starting_money = random.randint(STARTING_MONEY_LOW, STARTING_MONEY_HIGH)
+    starting_health = random.randint(STARTING_HEALTH_LOW, STARTING_HEALTH_HIGH)
+    starting_min_dmg = random.randint(STARTING_MIN_DMG_LOW, STARTING_MIN_DMG_HIGH)
+    starting_max_dmg = random.randint(STARTING_MAX_DMG_LOW, STARTING_MAX_DMG_HIGH)
 
     # Return a dictionary containing the four values above.
     return {
-        "money": ...,
-        "health": ...,
-        "min_damage": ...,
-        "max_damage": ...,
+        "money": starting_money,
+        "health": starting_health,
+        "min_damage": starting_min_dmg,
+        "max_damage": starting_max_dmg,
     }
 
 
@@ -112,10 +115,10 @@ def display_stats(stats: dict[str, int]):
 
     print(WIZARD_STATS_MESSAGE)
 
-    print(...)
-    print(...)
-    print(...)
-    print(...)
+    print(f"Money: {stats["money"]}")
+    print(f"HP: {stats["health"]}")
+    print(f"Min DMG: {stats["min_damage"]}")
+    print(f"Max DMG: {stats["max_damage"]}")
 
 
 def wizard_reroll(player_name: str) -> dict[str, int]:
@@ -148,44 +151,44 @@ def wizard_reroll(player_name: str) -> dict[str, int]:
     """
     # The player begins with one letter for each character
     # in their name.
-    letters_remaining = ...
+    letters_remaining = len(player_name)
 
     # Generate the first set of stats.
-    stats = ...
+    stats = randomize_stats()
 
     # Keep going until the player accepts their stats
     # or runs out of letters.
     while True:
 
         # Display the current stats.
-        ...
+        display_stats(stats)
 
         print(f"\nLetters remaining: {letters_remaining}")
 
         # Ask the player whether they want to keep or reroll.
-        choice = ...
+        choice = input(WIZARD_CHOICE_MESSAGE)
 
         # Validate the player's choice.
-        while ...:
-            choice = ...
+        while choice not in VALID_WIZARD_CHOICES:
+            choice = input(WIZARD_REPEAT_MESSAGE)
 
         # Choice "1" means keep the current stats.
-        if ...:
-            return ...
+        if choice == "1":
+            return stats
 
         # Otherwise, the player chose to reroll.
-        letters_remaining -= ...
+        letters_remaining -= 1
 
         print(WIZARD_REROLL_MESSAGE)
 
         # If no letters remain, the game ends.
-        if ...:
+        if letters_remaining == 0:
             print(WIZARD_GAME_OVER_MESSAGE)
             input("Press Enter to exit...")
             sys.exit()
 
         # Generate a new set of stats for the next loop.
-        stats = ...
+        stats = randomize_stats()
 
 
 def initialize_player() -> Player:
@@ -208,15 +211,15 @@ def initialize_player() -> Player:
     """
 
     # Ask for the player's name.
-    player_name = ...
+    player_name = input(GREETING_MESSAGE)
 
     # Check whether the name is valid.
-    is_name_valid = ...
+    is_name_valid = check_name_validity(player_name)
 
     # Keep asking until a valid name is entered.
-    while ...:
-        player_name = ...
-        is_name_valid = ...
+    while is_name_valid == False:
+        player_name = input(GREETING_REPEAT)
+        is_name_valid = check_name_validity(player_name)
 
     # Generate and accept the player's starting stats.
     stats = wizard_reroll(player_name)
@@ -228,11 +231,11 @@ def initialize_player() -> Player:
     # Use stats["health"] as the player's max_health.
     # Player automatically initializes current health to max_health.
     player = Player(
-        name=...,
-        money=...,
-        max_health=...,
-        min_damage=...,
-        max_damage=...,
+        name = player_name,
+        money = stats["money"],
+        max_health = stats["health"],
+        min_damage = stats["min_damage"],
+        max_damage = stats["max_damage"],
     )
 
-    return ...
+    return player

@@ -43,31 +43,31 @@ def display_stats(player: Player):
 
     # Display the player's current stats.
     # HINT: Look at the attributes available in the Player class.
-    print(f"Money:      {...}")
-    print(f"Health:     {...}")
-    print(f"Min Damage: {...}")
-    print(f"Max Damage: {...}")
+    print(f"Money:      {player.money}")
+    print(f"Health:     {player.health}")
+    print(f"Min Damage: {player.min_damage}")
+    print(f"Max Damage: {player.max_damage}")
 
     # Only display INVENTORY if the player owns at least one item.
     #
     # HINT:
     # Use "or" to check the player's item attributes.
-    if (...):
+    if (player.has_crown or player.has_paper_armor or player.has_sharpened_scissors or player.has_weighted_rock):
         print("\nINVENTORY:")
 
         # Check each item separately.
         # If the player owns it, display its name.
 
-        if ...:
+        if player.has_weighted_rock:
             print("- Weighted Rock")
 
-        if ...:
+        if player.has_paper_armor:
             print("- Paper Armor")
 
-        if ...:
+        if player.has_sharpened_scissors:
             print("- Sharpened Scissors")
 
-        if ...:
+        if player.has_crown:
             print("- Crown of the Three Hands")
 
     # Pause before returning to the town menu.
@@ -109,14 +109,14 @@ def chose_what_to_do(player: Player) -> str:
     #
     # HINT:
     # my_string.replace("old text", "new text")
-    main_message = ...
+    main_message = MAIN_SCREEN.replace("~PLAYERNAME~", player.name)
 
     # Display the menu and get the player's choice.
-    game_state = ...
+    game_state = input(main_message)
 
     # Validate the player's choice.
-    while ...:
-        game_state = ...
+    while game_state not in VALID_MAIN_CHOICES:
+        game_state = input(MAIN_REPEAT_MESSAGE)
 
     # Return the validated choice to game.py.
-    return ...
+    return game_state
